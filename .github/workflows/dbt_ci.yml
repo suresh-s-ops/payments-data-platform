@@ -1,0 +1,22 @@
+name: dbt-ci
+on:
+  pull_request:
+    paths: ["dbt/**"]
+
+jobs:
+  slim-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install dbt-snowflake==1.8.*
+      - name: Download latest prod manifest for state comparison
+        uses: dawidd6/action-download-artifact@v6
+        with: {workflow: dbt_prod.yml, name: prod-manifest, path: prod-state}
+      - name: Build and test only changed models (and children)
+        working-directory: dbt
+        run: dbt build --select state:modified+ --defer --state ../prod-state --target ci
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_CI_KEY }}
