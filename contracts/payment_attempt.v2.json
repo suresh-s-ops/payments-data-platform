@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "payment_attempt",
+  "version": "2.0.0",
+  "type": "object",
+  "required": ["attempt_id", "order_id", "status", "amount", "currency", "event_ts"],
+  "properties": {
+    "attempt_id":   {"type": "string"},
+    "order_id":     {"type": "string"},
+    "customer_id":  {"type": "string"},
+    "status":       {"enum": ["authorized", "captured", "declined", "refunded"],
+                     "description": "authorized = bank approved and held funds; captured = money collected; declined = rejected by bank/processor; refunded = money returned to customer"},
+    "decline_code": {"type": ["string", "null"],
+                     "description": "Bank reason code, e.g. insufficient_funds (soft, retry-able) or stolen_card (hard, do not retry)"},
+    "amount":       {"type": "number", "minimum": 0},
+    "currency":     {"type": "string", "pattern": "^[A-Z]{3}$"},
+    "processor":    {"type": "string"},
+    "event_ts":     {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": true
+}
