@@ -1,0 +1,10 @@
+apache-airflow>=2.8
+apache-airflow-providers-snowflake
+apache-airflow-providers-apache-spark
+confluent-kafka
+jsonschema
+pandas
+pyspark
+snowflake-connector-python[pandas]
+oracledb
+dbt-snowflake==1.8.*
