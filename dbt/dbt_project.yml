@@ -1,0 +1,16 @@
+name: payments_platform
+version: "1.0.0"
+config-version: 2
+profile: payments_platform
+
+model-paths: ["models"]
+
+models:
+  payments_platform:
+    gold:
+      payments:
+        +tags: ["payments"]
+        +schema: gold_payments
+      collections:
+        +tags: ["collections"]
+        +schema: gold_collections
