@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: fct_payment_attempts
+    description: "Payment attempt data product (owner: payments-data-eng)."
+    config:
+      contract: {enforced: true}
+    columns:
+      - name: attempt_id
+        data_type: varchar
+        constraints: [{type: not_null}, {type: primary_key}]
+        tests: [unique]
+      - name: status
+        data_type: varchar
+        tests:
+          - accepted_values:
+              values: ['authorized', 'captured', 'declined', 'refunded']
+      - name: amount_usd
+        data_type: number(18,2)
+        tests:
+          - dbt_utils.accepted_range: {min_value: 0}
+      - name: attempt_date
+        data_type: date
+      # ...remaining columns declared with data_type
+    tests:
+      - dbt_utils.recency: {datepart: hour, field: updated_at, interval: 2}
